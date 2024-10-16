@@ -1,28 +1,37 @@
-import React, {useState} from 'react';
-import './App.css';
-import Weather from './components/Weather';
+import { useState } from "react";
+import type { TDailyName } from "./types";
 
+import { SelectBase } from "./components/SelectBase/SelectBase";
+import { Weather } from "./components/Weather/Weather";
+import { MOSCOW_COORDINATES, OPTIONS_WEATHER } from "./helpers/constants";
+
+import "./App.css";
 
 function App() {
-    const [variables, setVariables] = useState(['rain_sum', 'snowfall_sum']);
+  const [variables, setVariables] = useState<TDailyName[]>([
+    "rain_sum",
+    "snowfall_sum",
+  ]);
+
+  const handleSetVariables = (labels: string[]) => {
+    setVariables(labels as TDailyName[]);
+  };
 
   return (
     <div className="main">
-        <div>
-            <label>
-                {/* available values:
-                weathercode, temperature_2m_max, temperature_2m_min, apparent_temperature_max, apparent_temperature_min, sunrise, sunset, precipitation_sum, rain_sum,
-                showers_sum, snowfall_sum, precipitation_hours, windspeed_10m_max, windgusts_10m_max, winddirection_10m_dominant, shortwave_radiation_sum, et0_fao_evapotranspiration
-                */}
+      <h1>Данные о погоде в Москве за последнюю неделю</h1>
 
-                <input type="text" onInput={e => {
-                    // variables.push((e.target as HTMLInputElement).value)
-                    setVariables((prev) => [...prev, (e.target as HTMLInputElement).value])
-                }}/>
+      <SelectBase
+        options={OPTIONS_WEATHER}
+        selectedLabels={variables}
+        setSelectedLabels={handleSetVariables}
+      />
 
-            </label>
-        </div>
-      <Weather lat={55.751244} long={37.618423} variables={variables} />
+      <Weather
+        latitude={MOSCOW_COORDINATES.latitude}
+        longitude={MOSCOW_COORDINATES.longitude}
+        variables={variables}
+      />
     </div>
   );
 }
